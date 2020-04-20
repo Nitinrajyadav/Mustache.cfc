@@ -1,0 +1,58 @@
+{
+    "author": "Nitin Yadav",
+    "bugs": "",
+    "changelog": "forked from https://github.com/rip747/Mustache.cfc",
+    "contributors": [],
+    "dependencies": {},
+    "description": "",
+    "devDependencies": {},
+    "documentation": "",
+    "homepage": "https://github.com/Nitinrajyadav/Mustache.cfc",
+    "ignore": [
+        "**/.*",
+        "/test/",
+        "/tests/"
+    ],
+    "installPaths": {},
+    "instructions": "",
+    "keywords": [],
+    "license": [
+        {
+            "type": "",
+            "URL": ""
+        }
+    ],
+    "location": "ForgeboxStorage",
+    "name": "Mustache",
+    "private": false,
+    "projectURL": "https://github.com/Nitinrajyadav/Mustache.cfc",
+    "repository": {
+        "type": "git",
+        "URL": "https://github.com/Nitinrajyadav/Mustache.cfc"
+    },
+    "scripts": {},
+    "shortDescription": "Chris Wanstrath's Mustache templates for ColdFusion.",
+    "slug": "mustache",
+    "testbox": {
+        "bundles": "",
+        "directory": "tests.specs",
+        "excludes": "",
+        "labels": "",
+        "options": {},
+        "recurse": true,
+        "reporter": "",
+        "runner": [
+            {
+                "default": ""
+            }
+        ],
+        "testBundles": "",
+        "testSpecs": "",
+        "testSuites": "",
+        "verbose": true,
+        "watchDelay": 500,
+        "watchPaths": "**.cfc"
+    },
+    "type": "modules",
+    "version": "1.0.0"
+}

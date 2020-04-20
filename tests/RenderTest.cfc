@@ -1,376 +1,366 @@
-<cfcomponent extends="mxunit.framework.TestCase">
+component extends="mxunit.framework.TestCase" {
+	stache = createObject("component", "mustache.Mustache").init();
+	partials = {};
 
-	<cffunction name="setup">
-		<cfset partials = {} />
-		<cfset stache = createObject("component", "mustache.Mustache").init() />
-	</cffunction>
+	public function setup() {
+	}
 
-	<cffunction name="tearDown">
-<!---
+	public function tearDown() {
+		/* 
 		<cfoutput>#htmlCodeFormat(expected)#</cfoutput>
 		<hr />
 		<cfoutput>#htmlCodeFormat(stache.render(template, context, partials))#</cfoutput>
 		<cfabort />
---->
-		<cfset assertEquals(expected, stache.render(template, context, partials))/>
-	</cffunction>
+*/
+		assertEquals(expected, stache.render(template, context, partials));
+	}
 
-  <cffunction name="basic">
-    <cfset context = { thing = 'world'} />
-    <cfset template = "Hello, {{thing}}!" />
-    <cfset expected = "Hello, World!" />
-  </cffunction>
+	public function basic() {
+	var	context = { thing = 'world'};
+	var		template = "Hello, {{thing}}!";
+	var		expected = "Hello, World!";
+	}
 
-  <cffunction name="basicWithSpace">
-    <cfset context = { thing = 'world'} />
-    <cfset template = "Hello, {{ thing }}!" />
-    <cfset expected = "Hello, World!" />
-  </cffunction>
+	public function basicWithSpace() {
+	var	context = { thing = 'world'};
+	var		template = "Hello, {{ thing }}!";
+	var		expected = "Hello, World!";
+	}
 
-  <cffunction name="basicWithMuchSpace">
-    <cfset context = { thing = 'world'} />
-    <cfset template = "Hello, {{             thing    }}!" />
-    <cfset expected = "Hello, World!" />
-  </cffunction>
+	public function basicWithMuchSpace() {
+	var	context = { thing = 'world'};
+	var		template = "Hello, {{             thing    }}!";
+	var		expected = "Hello, World!";
+	}
 
-  <cffunction name="lessBasic">
-    <cfset context = { beverage = 'soda', person = 'Bob' } />
-    <cfset template = "It's a nice day for {{beverage}}, right {{person}}?" />
-    <cfset expected = "It's a nice day for soda, right Bob?"/>
-  </cffunction>
+	public function lessBasic() {
+	var	context = { beverage = 'soda', person = 'Bob' };
+	var		template = "It's a nice day for {{beverage}}, right {{person}}?";
+	var		expected = "It's a nice day for soda, right Bob?";
+	}
 
-  <cffunction name="evenLessBasic">
-    <cfset context = { name = 'Jon', thing = 'racecar'} />
-    <cfset template = "I think {{name}} wants a {{thing}}, right {{name}}?">
-    <cfset expected = "I think Jon wants a racecar, right Jon?" />
-  </cffunction>
+	public function evenLessBasic() {
+	var	context = { name = 'Jon', thing = 'racecar'};
+	var		template = "I think {{name}} wants a {{thing}}, right {{name}}?";
+	var		expected = "I think Jon wants a racecar, right Jon?";
+	}
 
-  <cffunction name="ignoresMisses">
-    <cfset context = { name = 'Jon'} />
-    <cfset template = "I think {{name}} wants a {{thing}}, right {{name}}?">
-    <cfset expected = "I think Jon wants a , right Jon?" />
-  </cffunction>
+	public function ignoresMisses() {
+	var	context = { name = 'Jon'};
+	var		template = "I think {{name}} wants a {{thing}}, right {{name}}?";
+	var		expected = "I think Jon wants a , right Jon?";
+	}
 
-  <cffunction name="renderZero">
-    <cfset context = { value = 0 } />
-    <cfset template = "My value is {{value}}." />
-    <cfset expected = "My value is 0." />
-  </cffunction>
+	public function renderZero() {
+	var	context = { value = 0 };
+	var		template = "My value == {{value}}.";
+	var		expected = "My value == 0.";
+	}
 
-  <cffunction name="comments">
-    <cfset context = structNew() />
-    <cfset context['!'] = "FAIL" />
-    <cfset context['the'] = "FAIL" />
-    <cfset template = "What {{!the}} what?" />
-    <cfset expected = "What what?" />
-  </cffunction>
+	public function comments() {
+	var	context = structNew();
+		context['!'] = "FAIL";
+		context['the'] = "FAIL";
+	var		template = "What {{!the}} what?";
+	var		expected = "What what?";
+	}
 
-  <cffunction name="falseSectionsAreHidden">
-    <cfset context =  { set = false } />
-    <cfset template = "Ready {{##set}}set {{/set}}go!" />
-    <cfset expected = "Ready go!" />
-  </cffunction>
+	public function falseSectionsAreHidden() {
+	var	context =  { set = false };
+	var		template = "Ready {{##set}}set {{/set}}go!";
+	var		expected = "Ready go!";
+	}
 
-   <cffunction name="trueSectionsAreShown">
-    <cfset context =  { set = true }  />
-    <cfset template = "Ready {{##set}}set {{/set}}go!" />
-    <cfset expected = "Ready set go!" />
-  </cffunction>
+	public function trueSectionsAreShown() {
+	var	context =  { set = true };
+	var		template = "Ready {{##set}}set {{/set}}go!";
+	var		expected = "Ready set go!";
+	}
 
-  <cffunction name="falseSectionsWithSpaceAreHidden">
-    <cfset context =  { set = false } />
-    <cfset template = "Ready {{ ##set }}set {{ /set }}go!" />
-    <cfset expected = "Ready go!" />
-  </cffunction>
+	public function falseSectionsWithSpaceAreHidden() {
+	var	context =  { set = false };
+	var		template = "Ready {{ ##set }}set {{ /set }}go!";
+	var		expected = "Ready go!";
+	}
 
-   <cffunction name="trueSectionsWithSpaceAreShown">
-    <cfset context =  { set = true }  />
-    <cfset template = "Ready {{ ##set }}set {{ /set }}go!" />
-    <cfset expected = "Ready set go!" />
-  </cffunction>
+	public function trueSectionsWithSpaceAreShown() {
+	var	context =  { set = true };
+	var		template = "Ready {{ ##set }}set {{ /set }}go!";
+	var		expected = "Ready set go!";
+	}
 
-  <cffunction name="falseSectionsAreShownIfInverted">
-    <cfset context =  { set = false }  />
-    <cfset template = "Ready {{^set}}set {{/set}}go!" />
-    <cfset expected = "Ready set go!" />
-  </cffunction>
+	public function falseSectionsAreShownIfInverted() {
+	var	context =  { set = false };
+	var		template = "Ready {{^set}}set {{/set}}go!";
+	var		expected = "Ready set go!";
+	}
 
-  <cffunction name="trueSectionsAreHiddenIfInverted">
-    <cfset context =  { set = true }  />
-    <cfset template = "Ready {{^set}}set {{/set}}go!" />
-    <cfset expected = "Ready go!" />
-  </cffunction>
+	public function trueSectionsAreHiddenIfInverted() {
+	var	context =  { set = true };
+	var		template = "Ready {{^set}}set {{/set}}go!";
+	var		expected = "Ready go!";
+	}
 
-  <cffunction name="emptyStringsAreFalse">
-    <cfset context =  { set = "" }  />
-    <cfset template = "Ready {{##set}}set {{/set}}go!" />
-    <cfset expected = "Ready go!" />
-  </cffunction>
+	public function emptyStringsAreFalse() {
+	var	context =  { set = "" };
+	var		template = "Ready {{##set}}set {{/set}}go!";
+	var		expected = "Ready go!";
+	}
 
-  <cffunction name="emptyQueriesAreFase">
-    <cfset context =  { set = QueryNew('firstname,lastname') }  />
-    <cfset template = "Ready {{^set}}No records found {{/set}}go!" />
-     <cfset expected = "Ready No records found go!" />
-  </cffunction>
+	public function emptyQueriesAreFase() {
+	var	context =  { set = QueryNew('firstname,lastname') };
+	var		template = "Ready {{^set}}No records found {{/set}}go!";
+	var		expected = "Ready No records found go!";
+	}
 
-  <cffunction name="emptyStructsAreFalse">
-    <cfset context =  { set = {} } />
-     <cfset template = "Ready {{^set}}No records found {{/set}}go!" />
-     <cfset expected = "Ready No records found go!" />
-  </cffunction>
+	public function emptyStructsAreFalse() {
+	var	context =  { set = {} };
+	var		template = "Ready {{^set}}No records found {{/set}}go!";
+	var		expected = "Ready No records found go!";
+	}
 
-  <cffunction name="emptyArraysAreFalse">
-    <cfset context =  { set = [] }  />
-     <cfset template = "Ready {{^set}}No records found {{/set}}go!" />
-     <cfset expected = "Ready No records found go!" />
-  </cffunction>
+	public function emptyArraysAreFalse() {
+	var	context =  { set = [] };
+	var		template = "Ready {{^set}}No records found {{/set}}go!";
+	var		expected = "Ready No records found go!";
+	}
 
-	<cffunction name="nonEmptyStringsAreTrue">
-    <cfset context =  { set = "x" }  />
-    <cfset template = "Ready {{##set}}set {{/set}}go!" />
-    <cfset expected = "Ready set go!" />
-  </cffunction>
+	public function nonEmptyStringsAreTrue() {
+	var	context =  { set = "x" };
+	var		template = "Ready {{##set}}set {{/set}}go!";
+	var		expected = "Ready set go!";
+  }
+  
+	public function skipMissingField() {
+	var	context =  structNew();
+	var		template = "There's something {{##foo}}missing{{/foo}}!";
+	var		expected = "There's something !";
+	}
 
-	<cffunction name="skipMissingField">
-		<cfset context =  structNew()  />
-    <cfset template = "There's something {{##foo}}missing{{/foo}}!" />
-    <cfset expected = "There's something !" />
-	</cffunction>
-
-  <cffunction name="structAsSection">
-    <cfset context = {
+	public function structAsSection() {
+	var	context = {
       contact = { name = 'Jenny', phone = '867-5309'}
-    } />
-    <cfset template = "{{##contact}}({{name}}'s number is {{phone}}){{/contact}}">
-    <cfset expected = "(Jenny's number is 867-5309)" />
-  </cffunction>
+    };
+	var		template = "{{##contact}}({{name}}'s number == {{phone}}){{/contact}}";
+	var		expected = "(Jenny's number == 867-5309)";
+	}
 
-  <cffunction name="noSpaceTokenTest_array">
-    <cfset context = {
+	public function noSpaceTokenTest_array() {
+	var	context = {
       list = [{item='a'}, {item='b'}, {item='c'}, {item='d'}, {item='e'}]
-    } />
-    <cfset template = "{{##list}}({{item}}){{/list}}" />
-    <cfset expected = "(a)(b)(c)(d)(e)" />
-  </cffunction>
+    };
+	var		template = "{{##list}}({{item}}){{/list}}";
+	var		expected = "(a)(b)(c)(d)(e)";
+	}
 
-  <cffunction name="implicitIterator_String">
-    <cfset context = {
+	public function implicitIterator_String() {
+	var	context = {
       list = ['a', 'b', 'c', 'd', 'e']
-    } />
-    <cfset template = "{{##list}}({{.}}){{/list}}" />
-    <cfset expected = "(a)(b)(c)(d)(e)" />
-  </cffunction>
+    };
+	var		template = "{{##list}}({{.}}){{/list}}";
+	var		expected = "(a)(b)(c)(d)(e)";
+	}
 
-  <cffunction name="implicitIterator_Integer">
-    <cfset context = {
+	public function implicitIterator_Integer() {
+	var	context = {
       list = [1, 2, 3, 4, 5]
-    } />
-    <cfset template = "{{##list}}({{.}}){{/list}}" />
-    <cfset expected = "(1)(2)(3)(4)(5)" />
-  </cffunction>
+    };
+	var		template = "{{##list}}({{.}}){{/list}}";
+	var		expected = "(1)(2)(3)(4)(5)";
+	}
 
-  <cffunction name="implicitIterator_Decimal">
-    <cfset context = {
+	public function implicitIterator_Decimal() {
+	var	context = {
       list = [1.10, 2.20, 3.30, 4.40, 5.50]
-    } />
-    <cfset template = "{{##list}}({{.}}){{/list}}" />
-    <cfset expected = "(1.10)(2.20)(3.30)(4.40)(5.50)" />
-  </cffunction>
+    };
+	var		template = "{{##list}}({{.}}){{/list}}";
+	var		expected = "(1.10)(2.20)(3.30)(4.40)(5.50)";
+	}
 
-  <cffunction name="queryAsSection">
-    <cfset contacts = queryNew("name,phone")/>
-    <cfset queryAddRow(contacts)>
-    <cfset querySetCell(contacts, "name", "Jenny") />
-    <cfset querySetCell(contacts, "phone", "867-5309") />
-    <cfset queryAddRow(contacts)>
-    <cfset querySetCell(contacts, "name", "Tom") />
-    <cfset querySetCell(contacts, "phone", "555-1234") />
-    <cfset context = {contacts = contacts} />
-    <cfset template = "{{##contacts}}({{name}}'s number is {{phone}}){{/contacts}}">
-    <cfset expected = "(Jenny's number is 867-5309)(Tom's number is 555-1234)" />
-  </cffunction>
+	public function queryAsSection() {
+		var	contacts = queryNew("name,phone");
+		queryAddRow(contacts);
+		querySetCell(contacts, "name", "Jenny");
+		querySetCell(contacts, "phone", "867-5309");
+		queryAddRow(contacts);
+		querySetCell(contacts, "name", "Tom");
+		querySetCell(contacts, "phone", "555-1234");
+	var	context = {contacts = contacts};
+	var		template = "{{##contacts}}({{name}}'s number == {{phone}}){{/contacts}}";
+	var		expected = "(Jenny's number == 867-5309)(Tom's number == 555-1234)";
+	}
 
-  <cffunction name="missingQueryColumnIsSkipped">
-    <cfset contacts = queryNew("name")/>
-    <cfset queryAddRow(contacts)>
-    <cfset querySetCell(contacts, "name", "Jenny") />
-    <cfset context = {contacts = contacts} />
-    <cfset template = "{{##contacts}}({{name}}'s number is {{phone}}){{/contacts}}">
-    <cfset expected = "(Jenny's number is )" />
-  </cffunction>
+	public function missingQueryColumnIsSkipped() {
+    var		contacts = queryNew("name");
+		queryAddRow(contacts);
+		querySetCell(contacts, "name", "Jenny");
+	var	context = {contacts = contacts};
+	var		template = "{{##contacts}}({{name}}'s number == {{phone}}){{/contacts}}";
+	var		expected = "(Jenny's number == )";
+	}
 
-  <cffunction name="arrayAsSection">
-    <cfset context = {
+	public function arrayAsSection() {
+	var	context = {
       contacts = [
         { name = 'Jenny', phone = '867-5309'}
         , { name = 'Tom', phone = '555-1234'}
       ]
-    } />
-    <cfset template = "{{##contacts}}({{name}}'s number is {{phone}}){{/contacts}}">
-    <cfset expected = "(Jenny's number is 867-5309)(Tom's number is 555-1234)" />
-  </cffunction>
+    };
+	var		template = "{{##contacts}}({{name}}'s number == {{phone}}){{/contacts}}";
+	var		expected = "(Jenny's number == 867-5309)(Tom's number == 555-1234)";
+	}
 
-  <cffunction name="missingStructKeyIsSkipped">
-    <cfset context = {
+	public function missingStructKeyIsSkipped() {
+	var	context = {
       contacts = [
         { name = 'Jenny', phone = '867-5309'}
         , { name = 'Tom'}
       ]
-    } />
-    <cfset template = "{{##contacts}}({{name}}'s number is {{^phone}}unlisted{{/phone}}{{phone}}){{/contacts}}">
-    <cfset expected = "(Jenny's number is 867-5309)(Tom's number is unlisted)" />
-  </cffunction>
+    };
+	var		template = "{{##contacts}}({{name}}'s number == {{^phone}}unlisted{{/phone}}{{phone}}){{/contacts}}";
+	var		expected = "(Jenny's number == 867-5309)(Tom's number == unlisted)";
+	}
 
-  <cffunction name="escape">
-    <cfset context = { thing = '<b>world</b>'} />
-    <cfset template = "Hello, {{thing}}!" />
-    <cfset expected = "Hello, &lt;b&gt;world&lt;/b&gt;!" />
-  </cffunction>
+	public function escape() {
+	var	context = { thing = '<b>world</b>'};
+	var		template = "Hello, {{thing}}!";
+	var		expected = "Hello, &lt;b&gt;world&lt;/b&gt;!";
+	}
 
-  <cffunction name="dontEscape">
-    <cfset template = "Hello, {{{thing}}}!" />
-    <cfset context = { thing = '<b>world</b>'} />
-    <cfset expected = "Hello, <b>world</b>!" />
-  </cffunction>
+	public function dontEscape() {
+	var		template = "Hello, {{{thing}}}!";
+	var	context = { thing = '<b>world</b>'};
+	var		expected = "Hello, <b>world</b>!";
+	}
 
-  <cffunction name="dontEscapeWithAmpersand">
-    <cfset context = { thing = '<b>world</b>'} />
-    <cfset template = "Hello, {{&thing}}!" />
-    <cfset expected = "Hello, <b>world</b>!" />
-  </cffunction>
+	public function dontEscapeWithAmpersand() {
+	var	context = { thing = '<b>world</b>'};
+	var		template = "Hello, {{&thing}}!";
+	var		expected = "Hello, <b>world</b>!";
+	}
 
-  <cffunction name="ignoreWhitespace">
-    <cfset context = { thing = 'world'} />
-    <cfset template = "Hello, {{   thing   }}!" />
-    <cfset expected = "Hello, world!" />
-  </cffunction>
+	public function ignoreWhitespace() {
+	var	context = { thing = 'world'};
+	var		template = "Hello, {{   thing   }}!";
+	var		expected = "Hello, world!";
+	}
 
-  <cffunction name="ignoreWhitespaceInSection">
-    <cfset context =  { set = true }  />
-    <cfset template = "Ready {{##  set  }}set {{/  set  }}go!" />
-    <cfset expected = "Ready set go!" />
-  </cffunction>
+	public function ignoreWhitespaceInSection() {
+	var	context =  { set = true };
+	var		template = "Ready {{##  set  }}set {{/  set  }}go!";
+	var		expected = "Ready set go!";
+	}
 
-  <cffunction name="callAFunction">
-    <cfset context = createObject("component", "Person")/>
-    <cfset context.firstname = "Chris" />
-    <cfset context.lastname = "Wanstrath" />
-    <cfset template = "Mustache was created by {{fullname}}." />
-    <cfset expected = "Mustache was created by Chris Wanstrath." />
-  </cffunction>
+	public function callAFunction() {
+	var	context = createObject("component", "Person");
+		context.firstname = "Chris";
+		context.lastname = "Wanstrath";
+	var		template = "Mustache was created by {{fullname}}.";
+	var		expected = "Mustache was created by Chris Wanstrath.";
+	}
 
-  <cffunction name="lambdaTest" access="private">
-		<cfreturn "Chris Wanstrath" />
-	</cffunction>
+	private function lambdaTest() {
+		return "Chris Wanstrath";
+	}
 
-  <cffunction name="lambda">
-		<cfset context = {fullname=lambdaTest} />
-    <cfset template = "Mustache was created by {{fullname}}." />
-    <cfset expected = "Mustache was created by Chris Wanstrath." />
-  </cffunction>
+	public function lambda() {
+	var	context = {fullname=lambdaTest};
+	var		template = "Mustache was created by {{fullname}}.";
+	var		expected = "Mustache was created by Chris Wanstrath.";
+	}
 
-  <cffunction name="filter">
-    <cfset context = createObject("component", "Filter")/>
-    <cfset template = "Hello, {{##bold}}world{{/bold}}." />
-    <cfset expected = "Hello, <b>world</b>." />
-  </cffunction>
+	public function filter() {
+    var	context = createObject("component", "Filter");
+	var		template = "Hello, {{##bold}}world{{/bold}}.";
+	var		expected = "Hello, <b>world</b>.";
+	}
 
-  <cffunction name="partial">
-	  <!--- using a subclass so that it will look for the partial in this directory --->
-		<cfset stache = createObject("component", "Winner").init()/>
-    <cfset context = { word = 'Goodnight', name = 'Gracie' } />
-    <cfset template = "<ul><li>Say {{word}}, {{name}}.</li><li>{{> gracie_allen}}</li></ul>" />
-    <cfset expected = "<ul><li>Say Goodnight, Gracie.</li><li>Goodnight</li></ul>" />
-  </cffunction>
+	public function partial() {
+		//  using a subclass so that it will look for the partial in this directory 
+		stache = createObject("component", "Winner").init();
+	var	context = { word = 'Goodnight', name = 'Gracie' };
+	var		template = "<ul><li>Say {{word}}, {{name}}.</li><li>{{> gracie_allen}}</li></ul>";
+	var		expected = "<ul><li>Say Goodnight, Gracie.</li><li>Goodnight</li></ul>";
+	}
 
-	<cffunction name="globalRegisteredPartial">
-		<!--- reinit, passing in the global partial --->
-		<cfscript>
-			var initPartials =
+	public function globalRegisteredPartial() {
+		//  reinit, passing in the global partial 
+
+		var initPartials =
 			{
 				gracie_allen = fileRead(expandPath("/tests/gracie_allen.mustache"))
 			};
-		</cfscript>
+		stache = createObject("component", "mustache.Mustache").init(initPartials);
+	var	context = { word = 'Goodnight', name = 'Gracie' };
+	var		template = "<ul><li>Say {{word}}, {{name}}.</li><li>{{> gracie_allen}}</li></ul>";
+	var		expected = "<ul><li>Say Goodnight, Gracie.</li><li>Goodnight</li></ul>";
+	}
 
-		<cfset stache = createObject("component", "mustache.Mustache").init(initPartials)/>
-		<cfset context = { word = 'Goodnight', name = 'Gracie' }/>
-		<cfset template = "<ul><li>Say {{word}}, {{name}}.</li><li>{{> gracie_allen}}</li></ul>"/>
-		<cfset expected = "<ul><li>Say Goodnight, Gracie.</li><li>Goodnight</li></ul>"/>
-	</cffunction>
+	public function runtimeRegisteredPartial() {
 
-	<cffunction name="runtimeRegisteredPartial">
-
-		<cfscript>
-			partials =
+		partials =
 			{
 				gracie_allen = fileRead(expandPath("/tests/gracie_allen.mustache"))
 			};
-		</cfscript>
+	var	context = { word = 'Goodnight', name = 'Gracie' };
+	var		template = "<ul><li>Say {{word}}, {{name}}.</li><li>{{> gracie_allen}}</li></ul>";
+	var		expected = "<ul><li>Say Goodnight, Gracie.</li><li>Goodnight</li></ul>";
+	}
 
-		<cfset context = { word = 'Goodnight', name = 'Gracie' }/>
-		<cfset template = "<ul><li>Say {{word}}, {{name}}.</li><li>{{> gracie_allen}}</li></ul>"/>
-		<cfset expected = "<ul><li>Say Goodnight, Gracie.</li><li>Goodnight</li></ul>"/>
+	public function invertedSectionHiddenIfStructureNotEmpty() {
+    var	context =  {set = {something='whatever'}};
+	var		template = "{{##set}}This sentence should be showing.{{/set}}{{^set}}This sentence should not.{{/set}}";
+	var		expected = "This sentence should be showing.";
+	}
 
-	</cffunction>
+	public function invertedSectionHiddenIfQueryNotEmpty() {
+    var		contacts = queryNew("name,phone");
+		queryAddRow(contacts);
+		querySetCell(contacts, "name", "Jenny");
+		querySetCell(contacts, "phone", "867-5309");
+	var	context = {set = contacts};
+	var		template = "{{##set}}This sentence should be showing.{{/set}}{{^set}}This sentence should not.{{/set}}";
+	var		expected = "This sentence should be showing.";
+	}
 
-	<cffunction name="invertedSectionHiddenIfStructureNotEmpty">
-		<cfset context =  {set = {something='whatever'}}  />
-		<cfset template = "{{##set}}This sentence should be showing.{{/set}}{{^set}}This sentence should not.{{/set}}" />
-		<cfset expected = "This sentence should be showing." />
-	</cffunction>
+	public function invertedSectionHiddenIfArrayNotEmpty() {
+    var	context =  {set = [1]};
+	var		template = "{{##set}}This sentence should be showing.{{/set}}{{^set}}This sentence should not.{{/set}}";
+	var		expected = "This sentence should be showing.";
+	}
 
-	<cffunction name="invertedSectionHiddenIfQueryNotEmpty">
-		<cfset contacts = queryNew("name,phone")/>
-		<cfset queryAddRow(contacts)>
-		<cfset querySetCell(contacts, "name", "Jenny") />
-		<cfset querySetCell(contacts, "phone", "867-5309") />
-		<cfset context = {set = contacts} />
-		<cfset template = "{{##set}}This sentence should be showing.{{/set}}{{^set}}This sentence should not.{{/set}}" />
-		<cfset expected = "This sentence should be showing." />
-	</cffunction>
+	public function dotNotation() {
+    var	context =  {};
+		context["value"] = "root";
+		context["level1"] = {};
+		context["level1"]["value"] = "level 1";
+		context["level1"]["level2"] = {};
+		context["level1"]["level2"]["value"] = "level 2";
+	var		template = "{{value}}|{{level1.value}}|{{level1.level2.value}}|{{notExist}}|{{level1.notExists}}|{{levelX.levelY}}";
+	var		expected = "root|level 1|level 2|||";
+	}
 
-	<cffunction name="invertedSectionHiddenIfArrayNotEmpty">
-		<cfset context =  {set = [1]}  />
-		<cfset template = "{{##set}}This sentence should be showing.{{/set}}{{^set}}This sentence should not.{{/set}}" />
-		<cfset expected = "This sentence should be showing." />
-	</cffunction>
+	public function whitespaceHeadAndTail() {
+	var	context = { thing = 'world'};
+	var		template = "#chr(32)##chr(9)##chr(32)#{{thing}}#chr(32)##chr(9)##chr(32)#";
+	var		expected = "#chr(32)##chr(9)##chr(32)#world#chr(32)##chr(9)##chr(32)#";
+	}
 
-	<cffunction name="dotNotation">
-		<cfset context =  {}  />
-		<cfset context["value"] = "root" />
-		<cfset context["level1"] = {} />
-		<cfset context["level1"]["value"] = "level 1" />
-		<cfset context["level1"]["level2"] = {} />
-		<cfset context["level1"]["level2"]["value"] = "level 2" />
+	public function whitespaceEmptyLinesInHeadAndTail() {
+	var	context = { thing = 'world'};
+	var		template = "#chr(10)##chr(32)##chr(9)##chr(32)#{{thing}}#chr(32)##chr(9)##chr(32)##chr(10)#";
+	var		expected = "#chr(32)##chr(9)##chr(32)#world#chr(32)##chr(9)##chr(32)#";
+	}
 
-		<cfset template = "{{value}}|{{level1.value}}|{{level1.level2.value}}|{{notExist}}|{{level1.notExists}}|{{levelX.levelY}}" />
-		<cfset expected = "root|level 1|level 2|||" />
-	</cffunction>
+	public function whitespaceEmptyLinesWithCarriageReturnInHeadAndTail() {
+	var	context = { thing = 'world'};
+	var		template = "#chr(13)##chr(10)##chr(32)##chr(9)##chr(32)#{{thing}}#chr(32)##chr(9)##chr(32)##chr(13)##chr(10)#";
+	var		expected = "#chr(32)##chr(9)##chr(32)#world#chr(32)##chr(9)##chr(32)#";
+	}
 
-	<cffunction name="whitespaceHeadAndTail">
-    <cfset context = { thing = 'world'} />
+	public function whiteSpaceManagement() {
 
-		<cfset template = "#chr(32)##chr(9)##chr(32)#{{thing}}#chr(32)##chr(9)##chr(32)#" />
-		<cfset expected = "#chr(32)##chr(9)##chr(32)#world#chr(32)##chr(9)##chr(32)#" />
-	</cffunction>
-
-	<cffunction name="whitespaceEmptyLinesInHeadAndTail">
-    <cfset context = { thing = 'world'} />
-
-		<cfset template = "#chr(10)##chr(32)##chr(9)##chr(32)#{{thing}}#chr(32)##chr(9)##chr(32)##chr(10)#" />
-		<cfset expected = "#chr(32)##chr(9)##chr(32)#world#chr(32)##chr(9)##chr(32)#" />
-	</cffunction>
-
-	<cffunction name="whitespaceEmptyLinesWithCarriageReturnInHeadAndTail">
-    <cfset context = { thing = 'world'} />
-
-		<cfset template = "#chr(13)##chr(10)##chr(32)##chr(9)##chr(32)#{{thing}}#chr(32)##chr(9)##chr(32)##chr(13)##chr(10)#" />
-		<cfset expected = "#chr(32)##chr(9)##chr(32)#world#chr(32)##chr(9)##chr(32)#" />
-	</cffunction>
-
-	<cffunction name="whiteSpaceManagement">
-		<cfscript>
-			context = {
+	var	context = {
 				  name="Dan"
 				, value=1000
 				, taxValue=600
@@ -384,7 +374,7 @@
 			context.list[3] = {item="Third note"};
 			context.list[4] = {item="Etc, etc, etc."};
 
-			template = trim('
+	var			template = trim('
 Hello "{{name}}"
 You have just won ${{value}}!
 
@@ -404,7 +394,7 @@ Here are the history notes:
 {{/list}}
 			');
 
-			expected = trim('
+	var			expected = trim('
 Hello "Dan"
 You have just won $1000!
 
@@ -422,12 +412,11 @@ Here are the history notes:
   * Third note
   * Etc, etc, etc.
 			');
-		</cfscript>
-	</cffunction>
+	}
 
-	<cffunction name="whiteSpaceManagementWithFalseBlocks">
-		<cfscript>
-			context = {
+	public function whiteSpaceManagementWithFalseBlocks() {
+
+	var	context = {
 				  name="Dan"
 				, value=1000
 				, taxValue=600
@@ -441,7 +430,7 @@ Here are the history notes:
 			context.list[3] = {item="Third note"};
 			context.list[4] = {item="Etc, etc, etc."};
 
-			template = trim('
+	var			template = trim('
 Hello "{{name}}"
 You have just won ${{value}}!
 
@@ -461,7 +450,7 @@ Here are the history notes:
 {{/list}}
 			');
 
-			expected = trim('
+	var			expected = trim('
 Hello "Dan"
 You have just won $1000!
 
@@ -477,12 +466,11 @@ Here are the history notes:
   * Third note
   * Etc, etc, etc.
 			');
-		</cfscript>
-	</cffunction>
+	}
 
-	<cffunction name="whiteSpaceManagementWithElseIffy">
-		<cfscript>
-			context = {
+	public function whiteSpaceManagementWithElseIffy() {
+
+	var	context = {
 				  name="Dan"
 				, value=1000
 				, taxValue=600
@@ -490,7 +478,7 @@ Here are the history notes:
 				, html="<b>some html</b>"
 			};
 
-			template = trim('
+		var	template = trim('
 Hello "{{name}}"
 You have just won ${{value}}!
 
@@ -504,7 +492,7 @@ No new taxes!
 I did{{^in_ca}} <strong><em>not</em></strong>{{/in_ca}} calculate taxes.
 			');
 
-			expected = trim('
+			var expected = trim('
 Hello "Dan"
 You have just won $1000!
 
@@ -512,12 +500,11 @@ No new taxes!
 
 I did <strong><em>not</em></strong> calculate taxes.
 			');
-		</cfscript>
-	</cffunction>
+	}
 
-	<cffunction name="whiteSpaceManagementWithEmptyElseIffy">
-		<cfscript>
-			context = {
+	public function whiteSpaceManagementWithEmptyElseIffy() {
+
+		var context = {
 				  name="Dan"
 				, value=1000
 				, taxValue=600
@@ -525,7 +512,7 @@ I did <strong><em>not</em></strong> calculate taxes.
 				, html="<b>some html</b>"
 			};
 
-			template = trim('
+		var	template = trim('
 Hello "{{name}}"
 You have just won ${{value}}!
 
@@ -538,22 +525,21 @@ Well, ${{taxValue}}, after taxes.
 I did{{^in_ca}} <strong><em>not</em></strong>{{/in_ca}} calculate taxes.
 			');
 
-			expected = trim('
+		var	expected = trim('
 Hello "Dan"
 You have just won $1000!
 
 I did <strong><em>not</em></strong> calculate taxes.
 			');
-		</cfscript>
-	</cffunction>
+	}
 
-	<cffunction name="whiteSpaceManagementWithEmptyValue">
-		<cfscript>
-			context = {
+	public function whiteSpaceManagementWithEmptyValue() {
+
+		var context = {
 				  empty_value=""
 			};
 
-			template = trim('
+		var	template = trim('
 First line!
 
 {{empty_value}}
@@ -561,23 +547,22 @@ First line!
 Last line!
 			');
 
-			expected = trim('
+			var expected = trim('
 First line!
 
 
 
 Last line!
 			');
-		</cfscript>
-	</cffunction>
+	}
 
-	<cffunction name="whiteSpaceManagementWithNonEmptyValue">
-		<cfscript>
-			context = {
+	public function whiteSpaceManagementWithNonEmptyValue() {
+
+	var	context = {
 				  not_empty_value="here!"
 			};
 
-			template = trim('
+		var	template = trim('
 First line!
 
 {{not_empty_value}}
@@ -585,106 +570,102 @@ First line!
 Last line!
 			');
 
-			expected = trim('
-First line!
+		var 	expected = trim('
+        First line!
 
-here!
+        here!
 
-Last line!
+        Last line!
 			');
-		</cfscript>
-	</cffunction>
+	}
 
-	<cffunction name="multilineComments">
-		<cfscript>
-	    context = { thing = 'world'};
+	public function multilineComments() {
 
-			template = trim('
-Hello {{!inline comment should only produce one space}} {{thing}}!
-{{!
-	a multi
-	line comment
-}}
-Bye{{!inline comment should only produce one space}} {{thing}}!
-No{{! break }}space!
+		var  context = { thing = 'world'};
+
+		var	template = trim('
+          Hello {{!inline comment should only produce one space}} {{thing}}!
+          {{!
+            a multi
+            line comment
+          }}
+          Bye{{!inline comment should only produce one space}} {{thing}}!
+          No{{! break }}space!
 			');
 
-			expected = trim('
-Hello world!
-Bye world!
-Nospace!
+			var expected = trim('
+              Hello world!
+              Bye world!
+              Nospace!
 			');
-		</cfscript>
-	</cffunction>
+	}
 
-	<cffunction name="complexTemplate">
-		<cfset var Helper = createObject("component", "tests.Helper") />
-		<cfset context = Helper.getComplexContext() />
-		<cfset template = Helper.getComplexTemplate() />
-		<cfset expected = trim('
-Please do not respond to this message. This is for information purposes only.
+	public function complexTemplate() {
+		var Helper = createObject("component", "tests.Helper");
+		var context = Helper.getComplexContext();
+		var template = Helper.getComplexTemplate();
+		var expected = trim('
+        Please do !respond to this message. This == for information purposes only.
 
-FOR SECURITY PURPOSES, PLEASE DO NOT FORWARD THIS EMAIL TO OTHERS.
+        FOR SECURITY PURPOSES, PLEASE DO !FORWARD THIS EMAIL TO OTHERS.
 
-A new ticket has been entered and assigned to Tommy.
+        A new ticket has been entered && assigned to Tommy.
 
-Ticket No: 1234
-Priority: Medium
-Name: Jenny
-Subject: E-mail not working
-Phone Number: 867-5309
+        Ticket No: 1234
+        Priority: Medium
+        Name: Jenny
+        Subject: E-mail !working
+        Phone Number: 867-5309
 
-Description:
-Here''s a description
+        Description:
+        Here''s a description
 
-with some
+        with some
 
-new lines
+        new lines
 
-Public Note:
-User needs to update their software to the latest version.
+        Public Note:
+        User needs to update their software to the latest version.
 
-Thank you,
-Support Team
-		') />
-	</cffunction>
+        Thank you,
+        Support Team
+		');
+	}
 
-	<cffunction name="complexTemplateRev2">
-		<cfset var Helper = createObject("component", "tests.Helper") />
-		<cfset context = Helper.getComplexContext() />
+	public function complexTemplateRev2() {
+		var Helper = createObject("component", "tests.Helper");
+		var context = Helper.getComplexContext();
+		// // change context //
+		context.Settings.EnableEmailUpdates = false;
+		context.Settings.ShowPrivateNote = true;
+		context.Assignee.Name = "";
+		context.Customer.Room = "100";
+		context.Customer.Department = "Human Resources";
+		context.Ticket.Note = "";
+		context.Ticket.Description = "";
+		var template = Helper.getComplexTemplate();
+		var expected = trim('
+        FOR SECURITY PURPOSES, PLEASE DO !FORWARD THIS EMAIL TO OTHERS.
 
-		<!---// change context //--->
-		<cfset context.Settings.EnableEmailUpdates = false />
-		<cfset context.Settings.ShowPrivateNote = true />
-		<cfset context.Assignee.Name = "" />
-		<cfset context.Customer.Room = "100" />
-		<cfset context.Customer.Department = "Human Resources" />
-		<cfset context.Ticket.Note = "" />
-		<cfset context.Ticket.Description = "" />
+        A new ticket has been entered && == UNASSIGNED.
 
-		<cfset template = Helper.getComplexTemplate() />
-		<cfset expected = trim('
-FOR SECURITY PURPOSES, PLEASE DO NOT FORWARD THIS EMAIL TO OTHERS.
+        Ticket No: 1234
+        Priority: Medium
+        Name: Jenny
+        Subject: E-mail !working
+        Phone Number: 867-5309
+        Room: 100
+        Department: Human Resources
 
-A new ticket has been entered and is UNASSIGNED.
-
-Ticket No: 1234
-Priority: Medium
-Name: Jenny
-Subject: E-mail not working
-Phone Number: 867-5309
-Room: 100
-Department: Human Resources
-
-Description:
+        Description:
 
 
-Private Note:
-Client doesn''t want to listen to instructions
+        Private Note:
+        Client doesn''t want to listen to instructions
 
-Thank you,
-Support Team
-		') />
-	</cffunction>
+        Thank you,
+        Support Team
+		');
+	}
 
-</cfcomponent>
+}
