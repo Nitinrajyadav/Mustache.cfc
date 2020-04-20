@@ -1,3 +1,4 @@
-<cfcomponent extends="mustache.Mustache">
+component extends="mustache.Mustache"{
 
-</cfcomponent>
+}
+

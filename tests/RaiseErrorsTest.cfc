@@ -1,37 +1,35 @@
-<cfcomponent extends="mxunit.framework.TestCase">
+component extends="mxunit.framework.TestCase" {
 
-	<cffunction name="setup">
-		<cfset partials = {} />
-	</cffunction>
-	
-	<cffunction name="missingPartialErrorThrown">
-		<cfset expectException("Mustache.TemplateMissing")/>
+	public function setup() {
+		variables.partials = {};
+	}
 
-		<cfset stache = createObject("component", "mustache.Mustache").init() />
-		<cfset context = { word = 'Goodnight', name = 'Gracie' }/>
-		<cfset template = "<ul><li>Say {{word}}, {{name}}.</li><li>{{> gracie_allen}}</li></ul>"/>
-		<cfset expected = "<ul><li>Say Goodnight, Gracie.</li><li>Goodnight</li></ul>"/>
-		<cfset stache.render(template, context, partials)>
-	</cffunction>
+	public function missingPartialErrorThrown() {
+		expectException("Mustache.TemplateMissing");
+		var stache   = createObject("component", "mustache.Mustache").init();
+		var context  = { word = 'Goodnight', name = 'Gracie' };
+		var template = "<ul><li>Say {{word}}, {{name}}.</li><li>{{> gracie_allen}}</li></ul>";
+		var expected = "<ul><li>Say Goodnight, Gracie.</li><li>Goodnight</li></ul>";
+		stache.render(template, context, variables.partials);
+	}
 
-	<cffunction name="missingPartialSilentFailure">
-		<cfset stache = createObject("component", "mustache.Mustache").init(raiseErrors=false) />
-		<cfset context = { word = 'Goodnight', name = 'Gracie' }/>
-		<cfset template = "<ul><li>Say {{word}}, {{name}}.</li><li>{{> gracie_allen}}</li></ul>"/>
-		<cfset expected = "<ul><li>Say Goodnight, Gracie.</li><li></li></ul>"/>
-		<cfset assertEquals(expected, stache.render(template, context))/>
-	</cffunction>
-	
-	<cffunction name="missingTemplateErrorThrown">
-		<cfset expectException("Mustache.TemplateMissing")/>
+	public function missingPartialSilentFailure() {
+		var stache   = createObject("component", "mustache.Mustache").init(raiseErrors=false);
+		var context  = { word = 'Goodnight', name = 'Gracie' };
+		var template = "<ul><li>Say {{word}}, {{name}}.</li><li>{{> gracie_allen}}</li></ul>";
+		var expected = "<ul><li>Say Goodnight, Gracie.</li><li></li></ul>";
+		assertEquals(expected, stache.render(template, context));
+	}
 
-		<cfset stache = createObject("component", "mustache.Mustache").init() />
-		<cfset stache.render()>
-	</cffunction>
+	public function missingTemplateErrorThrown() {
+		expectException("Mustache.TemplateMissing");
+		var stache = createObject("component", "mustache.Mustache").init();
+		var stache.render();
+	}
 
-	<cffunction name="missingTemplateSilentFailure">
-		<cfset stache = createObject("component", "mustache.Mustache").init(raiseErrors=false) />
-		<cfset assertEquals("", stache.render())/>
-	</cffunction>
-	
-</cfcomponent>
+	public function missingTemplateSilentFailure() {
+		var stache = createObject("component", "mustache.Mustache").init(raiseErrors=false);
+		assertEquals("", stache.render());
+	}
+
+}

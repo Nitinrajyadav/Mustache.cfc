@@ -3,21 +3,21 @@
 
 	This component is a ColdFusion implementation of the Mustache logic-less tempesting language (see http://mustache.github.com/.)
 
-	Key features of this implementation:
+	Key features of this implementation: 
 	* Enhanced whitespace management - extra whitespace around conditional output is automatically removed
 	* Partials
 	* Multi-line comments
 	* And can be extended via the onRenderTag event to add additional rendering logic
 
-	Homepage:     https://github.com/rip747/Mustache.cfc
-	Source Code:  https://github.com/rip747/Mustache.cfc.git
-	NOTES:
+	       Homepage: https: //github.com/rip747/Mustache.cfc
+	Source Code    : https: //github.com/rip747/Mustache.cfc.git
+	       NOTES   : 
 	reference for string building
-	http://www.aliaspooryorik.com/blog/index.cfm/e/posts.details/post/string-concatenation-performance-test-128
+	http: //www.aliaspooryorik.com/blog/index.cfm/e/posts.details/post/string-concatenation-performance-test-128
 */
 component output="false" {
 	// namespace for Mustache private variables (to avoid name collisions when extending Mustache.cfc) 
-	variables.Mustache = {};
+	variables.Mustache         = {};
 	variables.Mustache.Pattern = createObject("java","java.util.regex.Pattern");
 	
 	/**
@@ -60,7 +60,7 @@ component output="false" {
 	 * captures nested structure references
 	 * 
 	 * Explanation: 
-	 * see https://jex.im/regulex/#!flags=&re=%5C%7B%5C%7B%5Cs*(%23%23%7C%5C%5E)%5Cs*(%5Cw%2B(%3F%3A(%3F%3A%5C.%5Cw%2B)%7B1%2C%7D)%3F)%5Cs*%7D%7D(.*%3F)%5C%7B%5C%7B%5Cs*%2F%5Cs*%5C2%5Cs*%5C%7D%5C%7D
+	 * see https  : //jex.im/regulex/#!flags=&re=%5C%7B%5C%7B%5Cs*(%23%23%7C%5C%5E)%5Cs*(%5Cw%2B(%3F%3A(%3F%3A%5C.%5Cw%2B)%7B1%2C%7D)%3F)%5Cs*%7D%7D(.*%3F)%5C%7B%5C%7B%5Cs*%2F%5Cs*%5C2%5Cs*%5C%7D%5C%7D
 	 * 
 	 *      ->  start with  '{{', 
 	 *      ->  0 or more times "white space"
@@ -90,7 +90,7 @@ component output="false" {
 	 * captures nested structure references
 	 * 
 	 * Explanation: 
-	 * see https://jex.im/regulex/#!flags=&re=((%5E%5Cr%3F%5Cn%3F)%7C%5Cs%2B)%3F%5C%7B%5C%7B!.*%3F%5C%7D%5C%7D(%5Cr%3F%5Cn%3F(%5Cr%3F%5Cn%3F)%3F)%3F
+	 * see https  : //jex.im/regulex/#!flags=&re=((%5E%5Cr%3F%5Cn%3F)%7C%5Cs%2B)%3F%5C%7B%5C%7B!.*%3F%5C%7D%5C%7D(%5Cr%3F%5Cn%3F(%5Cr%3F%5Cn%3F)%3F)%3F
 	 * 
 	 * 
 	 * Examples: TODO: 
@@ -103,7 +103,7 @@ component output="false" {
 	 * captures nested structure references
 	 * 
 	 * Explanation: 
-	 * see https://jex.im/regulex/#!flags=&re=(%5E(%5Cr%3F%5Cn))%7C((%3F%3C!(%5Cr%3F%5Cn))(%5Cr%3F%5Cn)%24)
+	 * see https  : //jex.im/regulex/#!flags=&re=(%5E(%5Cr%3F%5Cn))%7C((%3F%3C!(%5Cr%3F%5Cn))(%5Cr%3F%5Cn)%24)
 	 * 
 	 * Examples: TODO: 
 	 * 
@@ -133,20 +133,20 @@ component output="false" {
 	/**
 	 * main function to call to a new template
 	 * 
-	 * @template struct,  				= {} 
-	 * @context  instance on Mustache   = this 
-	 * @partials {struct} 				= {}
-	 * @options  {struct} 				= {}
+	 * @template struct,                = {}
+	 * @context  instance on Mustache = this
+	 * @partials {struct}             = {}
+	 * @options  {struct}             = {}
 	 */
 	public function render(
-		template= readMustacheFile( ListLast( getMetaData(this).name, '.') ), 
-		context= this, 
-		required partials= {}, 
-		options= {}
+		         template = readMustacheFile( ListLast( getMetaData(this).name, '.') ),
+		         context  = this,
+		required partials = {},
+		         options  = {}
 	) {
 		//  Replace partials in template 
-		arguments.template = replacePartialsInTemplate(arguments.template,arguments.partials);
-		var results = renderFragment(argumentCollection=arguments);
+		    arguments.template = replacePartialsInTemplate(arguments.template,arguments.partials);
+		var results            = renderFragment(argumentCollection=arguments);
 		//  remove single blank lines at the head/tail of the stream 
 		results = variables.Mustache.HeadTailBlankLinesRegEx.matcher(javaCast("string", results)).replaceAll("");
 		return results;
@@ -163,7 +163,7 @@ component output="false" {
 		var matches = ReFindNoCaseValues(arguments.template, variables.Mustache.PartialRegEx);
 		if (ArrayLen(matches)) {
 			var partial = getPartial(Trim(matches[2]), arguments.partials);
-			var result = ReplaceNoCase(arguments.template, matches[1], partial);
+			var result  = ReplaceNoCase(arguments.template, matches[1], partial);
 		} else {
 			var result = arguments.template;
 		}
@@ -175,8 +175,7 @@ component output="false" {
 	 */
 	private function renderFragment(template, context, partials, options) {
 		//  clean the comments from the template 
-		arguments.template = variables.Mustache.CommentRegEx.matcher(javaCast("string", arguments.template))
-		arguments.template.replaceAll("$3");
+		arguments.template = variables.Mustache.CommentRegEx.matcher(javaCast("string", arguments.template)).replaceAll("$3");
 
 		StructAppend(arguments.partials, variables.Mustache.partials, false);
 		arguments.template = renderSections(arguments.template, arguments.context, arguments.partials, arguments.options);
@@ -190,10 +189,10 @@ component output="false" {
 			var matches = ReFindNoCaseValues(arguments.template, variables.Mustache.SectionRegEx);
 			if ( arrayLen(matches) == 0 )  break;
 			
-			var tag = matches[1];
-			var type = matches[2];
-			var tagName = matches[3];
-			var inner = matches[4];
+			var tag      = matches[1];
+			var type     = matches[2];
+			var tagName  = matches[3];
+			var inner    = matches[4];
 			var rendered = renderSection(tagName, type, inner, arguments.context, arguments.partials, arguments.options);
 			
 			//  look to see where the current tag exists in the output; which we use to see if starting whitespace should be trimmed -
@@ -206,13 +205,13 @@ component output="false" {
 				rendered = replace(rendered, "$", "\$", "all");
 			}
 
-			var whiteSpaceRegex = ""; //  rendered content was empty, so we just want to replace all the text 
+			var whiteSpaceRegex = "";  //  rendered content was empty, so we just want to replace all the text 
 			//  if the current section is in the same place as the last template, 
 			//  we do not need to clean up whitespace--because it's already been managed 
 			if ( sectionPosition < lastSectionPosition ) {
 				//  do not remove whitespace before the output, because we have already cleaned it 
 				if ( rendered == "$2" ) {
-					rendered = ""; //  no whitespace to clean up 
+					rendered = "";  //  no whitespace to clean up 
 				}
 			} else {
 				//  clean out the extra lines of whitespace from the output 
@@ -229,6 +228,7 @@ component output="false" {
 		}
 		return arguments.template;
 	}
+
 
 	private function renderSection(tagName, type, inner, context, partials, options){
 		
@@ -271,7 +271,7 @@ component output="false" {
 			return Invoke( 
 				arguments.context, 
 				arguments.tagName, 
-				{'name'= 1, 'value'= arguments.template} 
+				[ arguments.template ]
 			); 
 		} 
 		//  otherwise we have a struct w/a reference to a function or closure 
@@ -313,8 +313,8 @@ component output="false" {
 	private function renderArraySection(template, context, partials, options) {
 		var results = "";
 		//  trim the trailing whitespace--so we don't print extra lines 
-		arguments.template = rTrim(arguments.template);
-		saveContent variable="results" {
+		            arguments.template = rTrim(arguments.template);
+		saveContent variable           = "results" {
 			for ( var item in arguments.context ) {
 				writeOutput(
 					renderFragment(arguments.template, item, arguments.partials, arguments.options)
@@ -331,13 +331,13 @@ component output="false" {
 			var matches = ReFindNoCaseValues(arguments.template, variables.Mustache.TagRegEx);
 			if ( !arrayLen(matches) ) break;
 
-			var tag = matches[1];
-			var type = matches[2];
+			var tag     = matches[1];
+			var type    = matches[2];
 			var tagName = matches[3];
-			var extra = matches[4];//  gets the ".*" capture 
+			var extra   = matches[4];  //  gets the ".*" capture 
 			
-			var renderedTag = renderTag(type, tagName, arguments.context, arguments.partials, arguments.options, extra);
-			arguments.template = replace(arguments.template, tag, renderedTag);
+			var renderedTag        = renderTag(type, tagName, arguments.context, arguments.partials, arguments.options, extra);
+			    arguments.template = replace(arguments.template, tag, renderedTag);
 		}
 
 		return arguments.template;
@@ -345,23 +345,23 @@ component output="false" {
 
 	private function renderTag(type, tagName, context, partials, options, extra){
 		
-		var results = "";
+		var results          = "";
 		var arguments.extras = listToArray(arguments.extra, ":");
 
 		if ( arguments.type == "!" )  return "";
 		
 		if ( (arguments.type == "{") || (arguments.type == "&") ) {
-			arguments.value = get(arguments.tagName, arguments.context, arguments.partials, arguments.options);
+			arguments.value     = get(arguments.tagName, arguments.context, arguments.partials, arguments.options);
 			arguments.valueType = "text";
-			results = textEncode(arguments.value, arguments.options, arguments);
+			results             = textEncode(arguments.value, arguments.options, arguments);
 		} else if ( arguments.type == ">" ) {
-			arguments.value = renderPartial(arguments.tagName, arguments.context, arguments.partials, arguments.options);
+			arguments.value     = renderPartial(arguments.tagName, arguments.context, arguments.partials, arguments.options);
 			arguments.valueType = "partial";
-			results = arguments.value;
+			results             = arguments.value;
 		} else {
-			arguments.value = get(arguments.tagName, arguments.context, arguments.partials, arguments.options);
+			arguments.value     = get(arguments.tagName, arguments.context, arguments.partials, arguments.options);
 			arguments.valueType = "html";
-			results = htmlEncode(arguments.value, arguments.options, arguments);
+			results             = htmlEncode(arguments.value, arguments.options, arguments);
 		}
 
 		return onRenderTag(results, arguments);
@@ -380,7 +380,7 @@ component output="false" {
 	}
 
 	private function readMustacheFile(filename) {
-		var template= "";
+		var template = "";
 		try {
 			template = FileRead("#getDirectoryFromPath(getMetaData(this).path)##arguments.filename#.mustache");
 		} catch (any cfCatch) {
@@ -400,9 +400,9 @@ component output="false" {
 
 		if ( find(".", arguments.key) ) {
 			//  if we're a nested key, do a nested lookup 
-			var thisKey = ListFirst(arguments.key, ".");
+			var thisKey       = ListFirst(arguments.key, ".");
 			var restOfTheKeys = ListRest(arguments.key, ".");
-			if ( StructKeyExists(arguments.context, root) ) {
+			if ( StructKeyExists(arguments.context, thisKey) ) {
 				return get(restOfTheKeys, context[thisKey], arguments.partials, arguments.options);
 			} else {
 				return "";
@@ -425,6 +425,8 @@ component output="false" {
 			return "";
 		}
 	}
+
+
 
 	private function ReFindNoCaseValues(text, re) output=false {
 		var results = [];

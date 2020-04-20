@@ -1,43 +1,43 @@
-<cfcomponent extends="mxunit.framework.TestCase">
+component extends="mxunit.framework.TestCase" {
 
-	<cffunction name="setup">
-		<cfset partials = {} />
-		<cfset options = {} />
-		<cfset stache = createObject("component", "MustacheOverride").init() />
-	</cffunction>
+	public function setup() {
+		variables.partials = {};
+		variables.options = {};
+		variables.stache = createObject("component", "MustacheOverride").init();
+	}
 
-	<cffunction name="tearDown">
-		<!---// make sure tests are case sensitive //--->
-		<cfset assertEqualsCase(expected, stache.render(template, context, partials, options))/>
-		<!---// reset variables //--->
-		<cfset partials = {} />
-		<cfset context = {} />
-	</cffunction>
+	public function tearDown() {
+		// // make sure tests are case sensitive //
+		assertEqualsCase(expected, variables.stache.render(variables.template, variables.context, variables.partials, variables.options));
+		// // reset variables //
+		variables.partials = {};
+		variables.context = {};
+	}
 
-  <cffunction name="textEncode">
-    <cfset context = { thing = 'World'} />
-    <cfset template = "Hello, {{{thing}}}!" />
-    <cfset expected = "Hello, `World`!" />
-  </cffunction>
+	public function textEncode() {
+		variables.context  = { thing = 'World'};
+		variables.template = "Hello, {{{thing}}}!";
+		expected           = "Hello, `World`!";
+	}
 
-  <cffunction name="htmlEncode">
-    <cfset context = { thing = 'World'} />
-    <cfset template = "Hello, {{thing}}!" />
-    <cfset expected = "Hello, |World|!" />
-  </cffunction>
+	public function htmlEncode() {
+		variables.context  = { thing = 'World'};
+		variables.template = "Hello, {{thing}}!";
+		expected           = "Hello, |World|!";
+	}
 
-  <cffunction name="textEncode_options_useDefault">
-		<cfset options = {useDefault=true} />
-    <cfset context = { thing = '<b>World</b>'} />
-    <cfset template = "Hello, {{{thing}}}!" />
-    <cfset expected = "Hello, #context.thing#!" />
-  </cffunction>
+	public function textEncode_options_useDefault() {
+		variables.options  = {useDefault=true};
+		variables.context  = { thing = '<b>World</b>'};
+		variables.template = "Hello, {{{thing}}}!";
+		expected           = "Hello, #context.thing#!";
+	}
 
-  <cffunction name="htmlEncode_options_useDefault">
-		<cfset options = {useDefault=true} />
-    <cfset context = { thing = '<b>World</b>'} />
-    <cfset template = "Hello, {{thing}}!" />
-    <cfset expected = "Hello, #htmlEditFormat(context.thing)#!" />
-  </cffunction>
+	public function htmlEncode_options_useDefault() {
+		variables.options  = {useDefault=true};
+		variables.context  = { thing = '<b>World</b>'};
+		variables.template = "Hello, {{thing}}!";
+		expected           = "Hello, #htmlEditFormat(context.thing)#!";
+	}
 
-</cfcomponent>
+}

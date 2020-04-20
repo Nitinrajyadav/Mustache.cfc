@@ -1,6 +1,7 @@
-<cfcomponent output="false" extends="mxunit.framework.TestSuite">
-  <cfset addAll("tests.RenderTest")>
-  <cfset addAll("tests.WinnerTest") />
-  <cfset addAll("tests.one.two.three.WinnerTest") />
-  <cfset addAll("tests.CustomTagTest") />
-</cfcomponent>
+component output="false" extends="mxunit.framework.TestSuite"{
+  variables.addAll("tests.RenderTest");
+  variables.addAll("tests.WinnerTest");
+  variables.addAll("tests.one.two.three.WinnerTest");
+  variables.addAll("tests.CustomTagTest");
+  
+}

@@ -1,7 +1,6 @@
-<cfcomponent>
-
-	<cffunction name="bold" >
-		<cfargument name="text">
-	  <cfreturn "<b>#text#</b>" />
-	</cffunction>
-</cfcomponent>
+component{
+	
+	function bold(string text) {
+		return "<b>#text#</b>";
+  	}
+}

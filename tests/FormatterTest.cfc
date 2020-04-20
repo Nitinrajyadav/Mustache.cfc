@@ -1,113 +1,110 @@
-<cfcomponent extends="mxunit.framework.TestCase">
+component extends="mxunit.framework.TestCase" {
 
-	<cffunction name="setup">
-		<cfset partials = {} />
-		<cfset stache = createObject("component", "mustache.MustacheFormatter").init() />
-	</cffunction>
+	public function setup() {
+		// variables.stache   = createObject("component", "mustache.MustacheFormatter").init();
+		variables.stache   = createObject("component", "mustache/MustacheFormatter");
 
-	<cffunction name="tearDown">
-		<!---// make sure tests are case sensitive //--->
-		<cfset assertEqualsCase(expected, stache.render(template, context, partials))/>
-		<!---// reset variables //--->
-		<cfset partials = {} />
-		<cfset context = {} />
-	</cffunction>
+		variables.partials = {};
+		variables.template = "Hello, {{thing}}!";
+	}
 
-  <cffunction name="invalidFormatter">
-    <cfset context = { thing = 'World'} />
-    <cfset template = "Hello, {{thing:XXXXXX()}}!" />
-    <cfset expected = "Hello, World!" />
-  </cffunction>
+	public function tearDown() {
+		// // make sure tests are case sensitive //
+		assertEqualsCase(variables.expected, variables.stache.render(variables.template, variables.context, variables.partials));
+		// // reset variables //
+		variables.partials = {};
+		variables.context  = {};
+	}
 
-  <cffunction name="upperCase">
-    <cfset context = { thing = 'World'} />
-    <cfset template = "Hello, {{thing:upperCase()}}!" />
-    <cfset expected = "Hello, WORLD!" />
-  </cffunction>
+	public function invalidFormatter() {
+		variables.context  = { thing = 'World'};
+		variables.template = "Hello, {{thing:XXXXXX()}}!";
+		variables.expected = "Hello, World!";
+	}
 
-  <cffunction name="lowerCase">
-    <cfset context = { thing = 'World'} />
-    <cfset template = "Hello, {{thing:lowerCase()}}!" />
-    <cfset expected = "Hello, world!" />
-  </cffunction>
+	public function upperCase() {
+		variables.context  = { thing = 'World'};
+		variables.template = "Hello, {{thing:upperCase()}}!";
+		variables.expected = "Hello, WORLD!";
+	}
 
-  <cffunction name="leftPad">
-    <cfset context = { thing = 'World'} />
-    <cfset template = "Hello, [{{thing:leftPad(20)}}]" />
-    <cfset expected = "Hello, [#lJustify('World', 20)#]" />
-  </cffunction>
+	public function lowerCase() {
+		variables.context  = { thing = 'World'};
+		variables.template = "Hello, {{thing:lowerCase()}}!";
+		variables.expected = "Hello, world!";
+	}
 
-  <cffunction name="rightPad">
-    <cfset context = { thing = 'World'} />
-    <cfset template = "Hello, [{{thing:rightPad(20)}}]" />
-    <cfset expected = "Hello, [#rJustify('World', 20)#]" />
-  </cffunction>
+	public function leftPad() {
+		variables.context  = { thing = 'World'};
+		variables.template = "Hello, [{{thing:leftPad(20)}}]";
+		variables.expected = "Hello, [#lJustify('World', 20)#]";
+	}
 
-	<cffunction name="multiply">
-		<cfscript>
-			context = {
-				  name="Dan"
-				, value=1000
+	public function rightPad() {
+		variables.context  = { thing = 'World'};
+		variables.template = "Hello, [{{thing:rightPad(20)}}]";
+		variables.expected = "Hello, [#rJustify('World', 20)#]";
+	}
+
+	public function multiply() {
+
+		variables.context = {
+				name  = "Dan", 
+				value = 1000
 			};
 
-			template = 'Hello {{name}}! You have just won ${{value}}! Taxes are ${{value:multiply(0.2)}}!';
-			expected = 'Hello Dan! You have just won $1000! Taxes are $200!';
-		</cfscript>
-	</cffunction>
+		variables.template = 'Hello {{name}}! You have just won ${{value}}! Taxes are ${{value:multiply(0.2)}}!';
+		variables.expected = 'Hello Dan! You have just won $1000! Taxes are $200!';
+	}
 
-  <cffunction name="chainedFormatters">
-    <cfset context = { thing = 'World'} />
-    <cfset template = "Hello, {{thing:upperCase():leftPad(20):rightPad(40)}}!" />
-    <cfset expected = "Hello, #rJustify(lJustify('WORLD', 20), 40)#!" />
-  </cffunction>
+	public function chainedFormatters() {
+		variables.context  = { thing = 'World'};
+		variables.template = "Hello, {{thing:upperCase():leftPad(20):rightPad(40)}}!";
+		variables.expected = "Hello, #rJustify(lJustify('WORLD', 20), 40)#!";
+	}
 
+	public function complexTemplate() {
+		var Helper             = createObject("component", "tests.Helper");
+		variables.context  = Helper.getComplexContext();
+		variables.template = Helper.getComplexFormatterTemplate();
+		variables.expected = trim('
+			Please do !respond to this message. This = = for information purposes only.
 
-	<cffunction name="complexTemplate">
-		<cfset var Helper = createObject("component", "tests.Helper") />
-		<cfset context = Helper.getComplexContext() />
-		<cfset template = Helper.getComplexFormatterTemplate() />
+			FOR SECURITY PURPOSES, PLEASE DO !FORWARD THIS EMAIL TO OTHERS.
 
-		<cfset expected = trim('
-Please do not respond to this message. This is for information purposes only.
+			A new ticket has been entered && assigned to Tommy.
+			+----------------------------------------------------------------------------+
+			| Ticket : 1234                         Priority: Medium                     |
+			| Name   : Jenny                        Phone : 867-5309                   |
+			| Subject: E-mail !working                                                   |
+			+----------------------------------------------------------------------------+
+			Description: 
+			Here''s a description
 
-FOR SECURITY PURPOSES, PLEASE DO NOT FORWARD THIS EMAIL TO OTHERS.
+			with some
 
-A new ticket has been entered and assigned to Tommy.
+			new lines
+					');
+	}
+    public function complexTemplateRev2() {
+		var Helper            = createObject("component", "tests.Helper");
+		variables.context 							  = Helper.getComplexContext();
+		// change context 
+		variables.context.Settings.EnableEmailUpdates = false;
+		variables.context.Assignee.Name               = "";
+		variables.context.Ticket.Note                 = "";
+		variables.context.Ticket.Description          = "";
+		variables.template                            = Helper.getComplexFormatterTemplate();
+		variables.expected                            = trim('
+FOR SECURITY PURPOSES, PLEASE DO !FORWARD THIS EMAIL TO OTHERS.
+
+A new ticket has been entered && = = UNASSIGNED.
 +----------------------------------------------------------------------------+
-|  Ticket: 1234                         Priority: Medium                     |
-|    Name: Jenny                           Phone: 867-5309                   |
-| Subject: E-mail not working                                                |
+| Ticket : 1234                         Priority: Medium                     |
+| Name   : Jenny                          Phone : 867-5309                   |
+| Subject: E-mail !working                                                	 |
 +----------------------------------------------------------------------------+
-Description:
-Here''s a description
+');
+	}
 
-with some
-
-new lines
-		') />
-	</cffunction>
-
-	<cffunction name="complexTemplateRev2">
-		<cfset var Helper = createObject("component", "tests.Helper") />
-		<cfset context = Helper.getComplexContext() />
-
-		<!---// change context //--->
-		<cfset context.Settings.EnableEmailUpdates = false />
-		<cfset context.Assignee.Name = "" />
-		<cfset context.Ticket.Note = "" />
-		<cfset context.Ticket.Description = "" />
-
-		<cfset template = Helper.getComplexFormatterTemplate() />
-		<cfset expected = trim('
-FOR SECURITY PURPOSES, PLEASE DO NOT FORWARD THIS EMAIL TO OTHERS.
-
-A new ticket has been entered and is UNASSIGNED.
-+----------------------------------------------------------------------------+
-|  Ticket: 1234                         Priority: Medium                     |
-|    Name: Jenny                           Phone: 867-5309                   |
-| Subject: E-mail not working                                                |
-+----------------------------------------------------------------------------+
-') />
-	</cffunction>
-
-</cfcomponent>
+}

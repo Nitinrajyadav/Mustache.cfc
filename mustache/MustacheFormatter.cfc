@@ -24,7 +24,7 @@ component extends="Mustache" output="false" {
 	 * Examples: TODO
 	 * 
 	*/
-	variables.TagRegEx = CreateObject("java","java.util.regex.Pattern").compile("\{\{(!|\{|&|\>)?\s*(\w+)(.*?)\}?\}\}", 32);
+	variables.Mustache.TagRegEx = variables.Mustache.Pattern.compile("\{\{(!|\{|&|\>)?\s*(\w+)(.*?)\}?\}\}", 32);
 
 	/**
 	 * captures arguments to be passed to formatter functions
@@ -35,7 +35,7 @@ component extends="Mustache" output="false" {
 	 * Examples: TODO
 	 * 
 	 */
-	variables.Mustache.ArgumentsRegEx = createObject("java","java.util.regex.Pattern").compile("[^\s,]*(?<!\\)\(.*?(?<!\\)\)|(?<!\\)\[.*?(?<!\\)\]|(?<!\\)\{.*?(?<!\\)\}|(?<!\\)('|"").*?(?<!\\)\1|(?:(?!,)\S)+", 40);
+	variables.Mustache.ArgumentsRegEx = variables.Mustache.Pattern.compile("[^\s,]*(?<!\\)\(.*?(?<!\\)\)|(?<!\\)\[.*?(?<!\\)\]|(?<!\\)\{.*?(?<!\\)\}|(?<!\\)('|"").*?(?<!\\)\1|(?:(?!,)\S)+", 40);
 	
 	// overwrite the default methods
 	private function onRenderTag(rendered, options) {
@@ -65,14 +65,10 @@ component extends="Mustache" output="false" {
 					args = regexMatch(left(args, len(args)-1), variables.Mustache.ArgumentsRegEx);
 				} 
 
-				var invokeArgs = { name= 1, value= results };
-				for(var i=2; i<=ArrayLen(args); i++){
-					invokeArgs[name] = i;
-					invokeArgs[value] = trim(args[i]);
-				}
-
+				ArrayPrepend( args, results);
+			
 				// we'll call each function in a series, the output of one function will be the input in the next 
-				results =  Invoke(method= fnName, arguments= invokeArgs );
+				results =  Invoke(this, fnName, args );
 			}
 		}
 		return results;

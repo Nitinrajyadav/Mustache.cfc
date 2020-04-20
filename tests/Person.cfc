@@ -1,9 +1,8 @@
-<cfcomponent>
+component{
+	this.firstname = "John";
+	this.lastname = "Smith";
 
- 	<cfset this.firstname = "John" />
-	<cfset this.lastname = "Smith" />
-
-	<cffunction name="fullName" >
-	  <cfreturn "#this.firstname# #this.lastname#" />
-	</cffunction>
-</cfcomponent>
+	function fullName() {
+		return "#this.firstname# #this.lastname#";
+	}
+}

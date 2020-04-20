@@ -1,29 +1,25 @@
-<cfcomponent extends="mustache.Mustache">
+component extends="mustache.Mustache" {
 
-	<cffunction name="textEncode" access="private" output="false"
-		hint="Encodes a plain text string (can be overridden)">
-		<cfargument name="input"/>
-		<cfargument name="options"/>
+	/**
+	 * Encodes a plain text string (can be overridden)
+	 */
+	private function textEncode(input, options) output=false {
+		// check the options 
+		if ( structKeyExists(arguments.options, "useDefault") && arguments.options.useDefault ) {
+			return super.textEncode(argumentCollection=arguments);
+		}
+		return "`" & arguments.input & "`";
+	}
 
-		<!---// check the options //--->
-		<cfif structKeyExists(arguments.options, "useDefault") and arguments.options.useDefault>
-			<cfreturn super.textEncode(argumentCollection=arguments) />
-		</cfif>
+	/**
+	 * Encodes a string into HTML (can be overridden)
+	 */
+	private function htmlEncode(input, options) output=false {
+		// check the options
+		if ( structKeyExists(arguments.options, "useDefault") && arguments.options.useDefault ) {
+			return super.htmlEncode(argumentCollection=arguments);
+		}
+		return "|" & arguments.input & "|";
+	}
 
-		<cfreturn "`" & arguments.input & "`" />
-	</cffunction>
-
-	<cffunction name="htmlEncode" access="private" output="false"
-		hint="Encodes a string into HTML (can be overridden)">
-		<cfargument name="input"/>
-		<cfargument name="options"/>
-
-		<!---// check the options //--->
-		<cfif structKeyExists(arguments.options, "useDefault") and arguments.options.useDefault>
-			<cfreturn super.htmlEncode(argumentCollection=arguments) />
-		</cfif>
-
-		<cfreturn "|" & arguments.input & "|" />
-	</cffunction>
-
-</cfcomponent>
+}
